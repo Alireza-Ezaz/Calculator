@@ -13,6 +13,13 @@ const calculate = (operator, a = 0, b = 0) => {
     if (operator === '%') {
         return a % b
     } else if (operator === '÷') {
+        if(b === 0){
+            alert('Divide by 0 is NOT allowed');
+            result = 0;
+            clearScreen = false
+            screenValue = 0
+            return 0;
+        }
         return a / b
     } else if (operator === '+') {
         return parseFloat(a) + parseFloat(b)
@@ -33,7 +40,7 @@ export default function Keypad({updateScreen}) {
         }
 
         if (operators.includes(button)) {
-            if (clearScreen && button !== '=') {
+            if (clearScreen && button !== '=' && button !== '.') {
                 result = calculate(operator, result, screenValue)
                 screenValue = result
                 clearScreen = false
@@ -54,8 +61,6 @@ export default function Keypad({updateScreen}) {
             } else if (button === '=') {
                 result = calculate(operator, result, screenValue)
                 screenValue = result
-                console.log('/*****************')
-                console.log(screenValue)
                 clearScreen = false
                 operator = ''
             } else {
