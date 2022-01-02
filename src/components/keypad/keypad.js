@@ -3,11 +3,86 @@ import s from './keypad.module.css';
 import Button from '../button';
 import cx from 'classnames';
 
+let result = 0;
+let screenValue = 0;
+let operator = '';
+let clearScreen = false;
+let operators = ['+', '-', 'x', 'C', '+/-', '%', '÷', '.', '='];
+
+const calculate = (operator, a = 0, b = 0) => {
+    if (operator === '%') {
+        return a % b
+    } else if (operator === '÷') {
+        return a / b
+    } else if (operator === '+') {
+        return parseFloat(a) + parseFloat(b)
+    } else if (operator === '-') {
+        return a - b
+    } else if (operator === 'x') {
+        return parseFloat(a) * parseFloat(b)
+    }
+}
 
 export default function Keypad({updateScreen}) {
     const handleButtonClick = (button) => {
-        updateScreen(button);
-        console.log(button);
+
+        if (operator != '' && !clearScreen) {
+            result = screenValue
+            screenValue = 0;
+            clearScreen = true;
+        }
+
+        if (operators.includes(button)) {
+            if (clearScreen && button !== '=') {
+                result = calculate(operator, result, screenValue)
+                screenValue = result
+                clearScreen = false
+            }
+            if (button === '+/-') {
+                if (screenValue != 0) {
+                    screenValue = screenValue * -1
+                    if (operator === '') {
+                        result = screenValue
+                    }
+                }
+            } else if (button === '.') {
+                screenValue = screenValue + button
+            } else if (button === '=') {
+                result = calculate(operator, result, screenValue)
+                screenValue = result
+                console.log('/*****************')
+                console.log(screenValue)
+                clearScreen = false
+                operator = ''
+            } else {
+                operator = button
+            }
+        } else {
+            if ((parseFloat(screenValue) === 0 || screenValue === '') && button == 0) {
+                screenValue = 0
+            } else if (screenValue === 0 && button !== 0) {
+                screenValue = button
+            } else if (screenValue !== 0 && button !== 0) {
+                screenValue = screenValue + button
+            }
+        }
+
+
+        if (button === 'C') {
+            screenValue = 0;
+        }
+
+
+        // if (!operators.includes(button)) {
+        //     if (screenValue === 0 || operator !== '') {
+        //         screenValue = button
+        //     } else {
+        //         screenValue = screenValue + button; // concat numbers}
+        //     }
+        //     console.log(button);
+        // }
+        updateScreen(screenValue);
+
     };
 
     const buttons = [
