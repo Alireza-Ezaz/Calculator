@@ -45,6 +45,10 @@ export default function Keypad({updateScreen}) {
                         result = screenValue
                     }
                 }
+            } else if (button === 'C' || isNaN(screenValue)) {
+                result = 0;
+                clearScreen = false
+                screenValue = 0
             } else if (button === '.') {
                 screenValue = screenValue + button
             } else if (button === '=') {
@@ -67,20 +71,6 @@ export default function Keypad({updateScreen}) {
             }
         }
 
-
-        if (button === 'C') {
-            screenValue = 0;
-        }
-
-
-        // if (!operators.includes(button)) {
-        //     if (screenValue === 0 || operator !== '') {
-        //         screenValue = button
-        //     } else {
-        //         screenValue = screenValue + button; // concat numbers}
-        //     }
-        //     console.log(button);
-        // }
         updateScreen(screenValue);
 
     };
